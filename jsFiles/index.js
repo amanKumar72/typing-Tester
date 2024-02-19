@@ -101,7 +101,7 @@ setTimeout(()=>{
     letsGo(time,type[ty]);                                           //function ti start or try again the test letsGo(minutes,array of text)
     start.addEventListener("click",()=>                         //Called when we click Try again
     {   
-        
+        test.innerHTML="";
         letsGo(time,type[ty]);
     })
 
