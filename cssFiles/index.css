@@ -31,11 +31,13 @@ body{
 
 .main-content-tester p{
     width:50rem ;
+    /* height:3rem; */
     margin: 0 1rem 1rem 1rem;
     padding: 0 1rem 1rem 1rem;
     text-align: center;
     cursor: default;
     font-size: large;
+    /* overflow-y: auto; */
 }
 
 .main-content-tester h2{
