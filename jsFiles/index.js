@@ -1,6 +1,8 @@
 window.onload = () => {
   let Time = localStorage.getItem("time");
   let Type = localStorage.getItem("type");
+  // console.log(AccuracyRequired,WpmRequired);
+  console.log(Time,Type);
   document.querySelector(".time").innerHTML = Time;
   document.querySelector(".type").innerHTML = Type;
 };
@@ -10,12 +12,14 @@ let start = document.querySelector(".start"); //button throught which we can try
 let test = document.querySelector("#typedText"); //the area where we type
 let min = document.querySelector("#min"); //where minutes are displayes
 let sec = document.querySelector("#sec"); //where minutes are displays
-let close = document.querySelector("#plus");
+let resultDiv = document.querySelector("#Result"); //where result is displayes
+let close = document.querySelector("#plus"); 
 let keystrokes = document.querySelector("#keystrokes");
 let wrongWords = document.querySelector("#wrongWords");
 let correctWords = document.querySelector("#correctWords");
 let accuracy = document.querySelector("#accuracy");
 let wpm = document.querySelector("#wpm");
+let showResult = document.querySelector("#resultButton");
 
 const easy = [
   //Text for easy typing test
@@ -98,29 +102,41 @@ setTimeout(() => {
     hard,
     medium,
   };
-  letsGo(time, type[ty]);
+  console.log(type,ty)
+
   //function ti start or try again the test letsGo(minutes,array of text)
+  letsGo(time, type[ty]);
+
+
+  //Called when we click Try again
   start.addEventListener("click", () =>
-    //Called when we click Try again
     {
       test.innerHTML = "";
       text.innerHTML = "";
       letsGo(time, type[ty]);
     }
   );
-}, 200);
+}, 500);
 
 function letsGo(minute, array) {
-  random = randomvalue(array); //for random selection
+  //for random selection
   function randomvalue(array) {
     return Math.floor(Math.random() * array.length);
   }
+
+  random = randomvalue(array); //for random selection
+
+  //for random paragraphs
   function randomParagraphs(random) {
+  
     array[random].split("").forEach((span) => {
+
       //split selected text in individual alphabets within an array
       text.innerHTML += `<span>${span}</span>`; //insert all alphabets in text area within a span
+
     });
   }
+
   randomParagraphs(random);
 
   let inChar = document.querySelectorAll("#randomText span"); //select an individual span
@@ -129,14 +145,19 @@ function letsGo(minute, array) {
   let index = 0; //for traversing individual alphabets from original array
   let rightCount = 0; //to count right typed alphabets
   let wrongCount = 0; //to count wrong typed alphabets
+
+
   test.addEventListener("keydown", (event) => {
+
+    //if last alphabet is reached then select another paragraph
     if (array[random][index] === undefined && i != 0) {
       random = randomvalue(array);
       index = 0;
       randomParagraphs(random);
     }
-    //if last alphabet is reached then select another paragraph
-    //when we pressed any key it from keybored it accesed by event
+
+    //8 is backspace key
+    //when we pressed any key it from keyboard it accesed by event
     if (i == 0 && rightKey(event) && event.which != 8) {
       i = 1;
       seconds = minute * 60 + 1;
@@ -146,12 +167,11 @@ function letsGo(minute, array) {
         sec.innerHTML = `${Math.floor(seconds % 60)}`;
         if (seconds == 0) {
           clearInterval(interval);
-          alert("STOP WRITING");
+          alert("STOP WRITING TIME IS UP");
           let acc = Math.floor((rightCount / (rightCount + wrongCount)) * 100);
           let speed = Math.floor(
             rightCount / 5 / ((minute * 60 - seconds) / 60)
           );
-          // console.log(`Right Typed Words=${rightCount}\nwrong words=${wrongCount}\nYour Typing Speed is ${speed}\nAccuracy=${acc}`);
           accuracy.innerHTML = `<span>Accuracy</span><span> ${acc}%</span>`;
           keystrokes.innerHTML = `<span>keystrokes</span><span>(${rightCount}|${wrongCount}) ${
             rightCount + wrongCount
@@ -159,6 +179,31 @@ function letsGo(minute, array) {
           correctWords.innerHTML = `<span>Correct Words</span><span>${rightCount}</span>`;
           wrongWords.innerHTML = `<span>Wrong Words</span><span>${wrongCount}</span>`;
           wpm.innerHTML = `<p id="wpm">${speed}Wpm</p>`;
+
+          let AccuracyRequired = localStorage.getItem("accuracyRequired");
+          let WpmRequired = localStorage.getItem("wpmRequired");
+          console.log(AccuracyRequired,WpmRequired);
+          if(AccuracyRequired && WpmRequired){
+            if(accuracy<AccuracyRequired && speed<WpmRequired){
+              let div=document.createElement("div");
+              div.innerHTML="Your accuracy and speed is less than required accuracy and speed please try again and improve your accuracy and speed";
+              resultDiv.appendChild(div);
+            }
+            else if(accuracy<AccuracyRequired){
+              let div=document.createElement("div");
+              div.innerHTML="Your accuracy is less than required accuracy please try again and improve your accuracy";
+              resultDiv.appendChild(div);
+            }
+            else if(speed<WpmRequired){
+              let div=document.createElement("div");
+              div.innerHTML="Your speed is less than required speed please try again and improve your speed";
+              resultDiv.appendChild(div);
+            }else{
+              let div=document.createElement("div");
+              div.innerHTML="Congratulations you passed the test";
+              resultDiv.appendChild(div);
+            }
+          }
           result();
           min.innerHTML = "00";
           sec.innerHTML = "00";
@@ -167,21 +212,24 @@ function letsGo(minute, array) {
         }
       }, 1000);
     }
+
+    //check typed value is correct or not
+    //event.key is the key that we pressed
     if (array[random][index] == event.key) {
-      //check typed value is correct or not
       if (rightKey(event)) {
         // check key is a valid key i.e key is not a alt/ctrl/space/backspace/arrow key/tab/capslock/windows
         inChar[index].classList.add("correct"); //add class on spam
         rightCount++; //increment right count
       }
-    } else {
-      if (rightKey(event)) {
+    } else if (rightKey(event)){
+       
         inChar[index].classList.add("incorrect");
-        if (!(event.which == 8)) wrongCount++;
-        // console.log(event);
-      }
+
+        if (!(event.which == 8)) wrongCount++;//if key is not backspace then increment wrong count
+      
     }
-    // console.log(event.which);
+
+    //if key is backspace then remove incorrect and correct class from previous alphabet and decrement index
     if (event.which == 8 && i != 0) {
       inChar[index].classList.remove("incorrect");
       inChar[index].classList.remove("correct");
@@ -193,9 +241,11 @@ function letsGo(minute, array) {
     } else {
       index = index;
     }
+
   });
 }
 
+//check key is a valid key i.e key is not a alt/ctrl/space/backspace/arrow key/tab/capslock/windows
 function rightKey(event) {
   return !(
     event.which == 16 ||
@@ -232,20 +282,27 @@ function rightKey(event) {
   );
 }
 
-//result watch
+//open result window
 function result() {
+  document.querySelector("#Result").style.display = "flex";
   document.querySelector(".main").style.filter = "blur(2px)";
-  document.querySelector("#Result").style.opacity = 1;
 }
 
+
+//close result window 
 close.addEventListener("click", () => {
-  document.querySelector("#Result").style.opacity = 0;
+  document.querySelector("#Result").style.display = "none";
   document.querySelector(".main").style.filter = "none";
 });
 
+//close result window when we press enter
 function hide(event) {
   if (event.which == 13) {
-    document.querySelector("#Result").style.opacity = 0;
+    document.querySelector("#Result").style.display = "none";
     document.querySelector(".main").style.filter = "none";
   }
 }
+
+showResult.addEventListener("click",()=>{
+  result()
+})

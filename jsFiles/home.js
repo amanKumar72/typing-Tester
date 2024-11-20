@@ -4,7 +4,6 @@ function next(){
     localStorage.setItem("time",givenTime.value);
     localStorage.setItem("type",givenType.value);
     window.location.href="../htmlFiles/index.html";
-
 }
 
 document.querySelector("#options").addEventListener("change",()=>{

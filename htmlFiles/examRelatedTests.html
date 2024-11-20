@@ -11,26 +11,65 @@
 <body>        
     <div class="main">
         <div class="head">
-            <div class="material-symbols-outlined">
-                
+            <div class="logo">
+                <img src="../images/logo.jpeg" alt="Typing Tester Logo" >
+                <span>TypingTester</span>
             </div>
-
+            <div class="nav-links">
+                <a href="#" class="active">Home</a>
+                <a href="#">About</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="user-actions">
+                <button class="login-btn">Login</button>
+                <button class="signup-btn">Sign Up</button>
+            </div>
         </div>
         <div class="sidebar">
           <div class="navTitle">
-              <h1>TYPING TESTER</h1>
+              <h1>SELECT TEST</h1>
           </div>
           <div class="navOption">
               <ol id="options">
                   <li value="typingTest" ><a href="../htmlFiles/home.html">Typing Test</a> &gt; </li>
-                  <li value="typingCourse"><a href="../htmlFiles/typingCourses.html">Typing Course &gt;</a></li>
-                  <li value="typingGame" ><a href="../bubbleSooter/bubble.html">Typing Games &gt;</a></li>
+                  <li value="typingGame" ><a href="../htmlFiles/typingGames.html">Typing Games &gt;</a></li>
                   <li value="examPreperation"><a href="../htmlFiles/examRelatedTests.html">Exam Related Tests &gt;</a></li>
               </ol>
           </div>
       </div>
-        
+      <div class="mainContent">
+        <div class="box">
+            <h1>
+                <b><i>
+                    Check your typing skills For the exams
+                </i></b>
+            </h1>
+            <h2><b>
+                SELECT YOUR EXAM AND TIME DURATION
+            </b></h2>
+            <select name="time" class="time" id="time">
+                <option value="0.5">30 Seconds</option>
+                <option value="1">1 Minute</option>
+                <option value="2">2 Minutes</option>
+                <option value="5">5 Minutes</option>
+            </select>
+            <br>
+            <select name="type" class="type" id="type">
+                <option value="sscCgl">SSC CGL Typing Test</option>
+                <option value="bankPO">Bank PO Typing Test</option>
+                <option value="railway">Railway Typing Test</option>        
+            </select>
+            <br>
+            <form action="../htmlFiles/index.html">
+                <button class="startTest" onclick="next()">Start Test</button>
+            </form>
+            
+            <br>
+            <img  id="men" src="../images/gentleman.png.svg" alt="">
+            <img  id="women" src="../images/lady.svg" alt="">
+        </div>
+    </div>
     </div> 
-    <script src="../jsFiles/home.js"></script>
+    <script src="../jsFiles/examRelatedTest.js"></script>
 </body>
 </html>
